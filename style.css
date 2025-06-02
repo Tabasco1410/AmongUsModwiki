@@ -1,0 +1,26 @@
+.role-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.role-info {
+  display: flex;
+  flex-direction: column;
+}
+
+button.kill-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+button.kill-btn:hover {
+  background-color: darkred;
+}
