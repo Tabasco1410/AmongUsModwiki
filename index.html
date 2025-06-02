@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Among Us Mod Wiki</title>
+  <style>
+    .role-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .role-info {
+      display: flex;
+      flex-direction: column;
+    }
+    button.kill-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    button.kill-btn:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+  <h1>Among Us Mod Wiki</h1>
+  <div id="role-list"></div>
+
+  <script>
+    fetch('roles.json')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('role-list');
+        data.forEach(role => {
+          const roleDiv = document.createElement('div');
+          roleDiv.className = 'role-container';
+          roleDiv.innerHTML = `
+            <img src="${role.image}" alt="${role.jp_name}" style="width:100px; height:auto;" />
+            <div class="role-info">
+              <h2>${role.jp_name} (${role.name})</h2>
+              <div style="display:flex; align-items:center; gap:10px;">
+                ${role.buttonText ? `<button class="kill-btn">${role.buttonText}</button>` : ''}
+                <p>${role.description}</p>
+              </div>
+            </div>
+          `;
+          container.appendChild(roleDiv);
+
+          // ボタンのマウスオーバー動作（クリックじゃなくて）
+          const btn = roleDiv.querySelector('button.kill-btn');
+          if (btn) {
+            btn.addEventListener('mouseenter', () => {
+              alert(`${role.jp_name}キルボタン`);
+            });
+          }
+        });
+      })
+      .catch(error => {
+        console.error('JSON読み込みエラー:', error);
+      });
+  </script>
+</body>
+</html>
