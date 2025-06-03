@@ -1,0 +1,126 @@
+<!-- header.html -->
+<div id="header-container">
+  <h1>Among Us Mod Wiki</h1>
+  <p class="description">ここではAmong UsのMod役職をカテゴリごとに詳しく紹介しています。</p>
+
+  <div class="tabs" id="tabs">
+    <!-- カテゴリタブが動的に入る -->
+  </div>
+
+  <div class="subbar" id="subbar" style="display:none;">
+    <ul id="subroles">
+      <!-- サブ役職が動的に入る -->
+    </ul>
+  </div>
+</div>
+
+<style>
+  #header-container {
+    padding: 20px;
+  }
+  h1 {
+    margin-bottom: 0;
+  }
+  p.description {
+    margin-top: 5px;
+    color: #555;
+  }
+  .tabs {
+    margin-top: 20px;
+    display: flex;
+    border-bottom: 2px solid #ccc;
+  }
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background: #eee;
+    margin-right: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    user-select: none;
+    transition: background 0.3s;
+  }
+  .tab.active {
+    background: white;
+    border-bottom: 2px solid white;
+    font-weight: bold;
+  }
+  .subbar {
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 0 5px 5px 5px;
+    margin-top: -1px;
+  }
+  .subbar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .subbar ul li a {
+    text-decoration: none;
+    color: #0366d6;
+    padding: 5px 8px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+  }
+  .subbar ul li a:hover {
+    background-color: #d0e7ff;
+    border-color: #0366d6;
+  }
+</style>
+
+<script>
+  const rolesJsonPath = './roles/roles.json';
+  let rolesData = {};
+
+  const tabsContainer = document.getElementById('tabs');
+  const subbar = document.getElementById('subbar');
+  const subrolesUl = document.getElementById('subroles');
+
+  function createTabs(data) {
+    rolesData = data;
+    Object.entries(data).forEach(([key, category]) => {
+      const tab = document.createElement('div');
+      tab.className = 'tab';
+      tab.textContent = category.label;
+      tab.dataset.key = key;
+      tab.addEventListener('click', () => selectTab(key));
+      tabsContainer.appendChild(tab);
+    });
+  }
+
+  function selectTab(key) {
+    [...tabsContainer.children].forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.key === key);
+    });
+
+    subrolesUl.innerHTML = '';
+    rolesData[key].roles.forEach(role => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `roles/role.html?category=${key}&role=${role.key}`;
+      a.textContent = role.label;
+      li.appendChild(a);
+      subrolesUl.appendChild(li);
+    });
+
+    subbar.style.display = 'block';
+  }
+
+  fetch(rolesJsonPath)
+    .then(res => res.json())
+    .then(data => {
+      createTabs(data);
+      selectTab(Object.keys(data)[0]);
+    })
+    .catch(err => {
+      document.getElementById('header-container').innerHTML += `<p>ヘッダー読み込みエラー：${err}</p>`;
+    });
+</script>

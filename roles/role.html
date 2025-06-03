@@ -1,3 +1,6 @@
+<body>
+  <div id="header"></div>
+
 <div>
   <h2 id="role-title"></h2>
   <img id="role-image" src="" alt="" style="width:150px; height:auto;" />
@@ -38,4 +41,11 @@ const jsonPath = `../roles/${category}/${roleName}.json`;
     .catch(err => {
       document.body.innerHTML = `<p>役職データの読み込みに失敗しました。<br>${err}</p>`;
     });
-</script>
+ // 共通ヘッダーを読み込む
+    fetch('../header.html')  // ルート直下の header.html を読み込む。
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('header').innerHTML = html;
+      });
+  </script>
+</body>
