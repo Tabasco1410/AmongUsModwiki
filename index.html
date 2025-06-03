@@ -75,76 +75,53 @@
   <p class="description">ここではAmong UsのMod役職をカテゴリごとに詳しく紹介しています。</p>
 
   <div class="tabs" id="tabs">
-    <!-- JSでタブ追加 -->
+    <!-- ここにカテゴリタブを動的生成 -->
   </div>
 
   <div class="subbar" id="subbar" style="display:none;">
     <ul id="subroles">
-      <!-- JSでサブ役職リンク追加 -->
+      <!-- ここにサブ役職リンクを動的生成 -->
     </ul>
   </div>
 
 <script>
-  // カテゴリとサブ役職のデータ（必要に応じてJSONファイルからfetchでもOK）
-  const data = {
-    impostor: {
-      label: "インポスター",
-      roles: [
-        {key: "evil_guesser", label: "イビルゲッサー"},
-        {key: "penguin", label: "ペンギン"},
-      ],
-    },
-    crewmate: {
-      label: "クルーメイト",
-      roles: [
-        {key: "doctor", label: "ドクター"},
-        {key: "bait", label: "ベイト"},
-      ],
-    },
-    third_faction: {
-      label: "第三陣営",
-      roles: [
-        {key: "jackal", label: "ジャッカル"},
-        {key: "arsonist", label: "アーソニスト"},
-      ],
-    },
-    ghost: {
-      label: "幽霊役職",
-      roles: [
-        {key: "ghost_botaner", label: "ゴーストボタナー"},
-        {key: "hallucination", label: "ハルシネーション"},
-      ],
-    },
-  };
+  // roles.jsonのパス
+  const rolesJsonPath = './roles/roles.json';
+
+  // 取得したデータを格納（再利用用）
+  let rolesData = {};
 
   const tabsContainer = document.getElementById('tabs');
   const subbar = document.getElementById('subbar');
   const subrolesUl = document.getElementById('subroles');
 
-  // タブを作る関数
-  function createTabs() {
-    for (const [key, cat] of Object.entries(data)) {
+  // JSONからカテゴリタブを作る関数
+  function createTabs(data) {
+    rolesData = data; // 保存
+
+    Object.entries(data).forEach(([key, category]) => {
       const tab = document.createElement('div');
       tab.className = 'tab';
-      tab.textContent = cat.label;
+      tab.textContent = category.label;
       tab.dataset.key = key;
       tab.addEventListener('click', () => selectTab(key));
       tabsContainer.appendChild(tab);
-    }
+    });
   }
 
-  // タブ選択時に呼ばれる
+  // タブ選択時の処理
   function selectTab(key) {
     // タブのactive切り替え
     [...tabsContainer.children].forEach(tab => {
       tab.classList.toggle('active', tab.dataset.key === key);
     });
 
-    // サブ役職を表示
+    // サブ役職リストのクリア＆再生成
     subrolesUl.innerHTML = '';
-    data[key].roles.forEach(role => {
+    rolesData[key].roles.forEach(role => {
       const li = document.createElement('li');
       const a = document.createElement('a');
+      // 役職ページへのリンク。URLパラメータでカテゴリと役職を渡す
       a.href = `pages/role.html?category=${key}&role=${role.key}`;
       a.textContent = role.label;
       li.appendChild(a);
@@ -154,9 +131,20 @@
     subbar.style.display = 'block';
   }
 
-  createTabs();
-  // 最初は一番目のカテゴリを選択
-  selectTab(Object.keys(data)[0]);
+  // ページ読み込み時にJSON読み込みと初期化
+  fetch(rolesJsonPath)
+    .then(res => {
+      if (!res.ok) throw new Error('roles.jsonの読み込みに失敗しました');
+      return res.json();
+    })
+    .then(data => {
+      createTabs(data);
+      // 最初のカテゴリを自動選択
+      selectTab(Object.keys(data)[0]);
+    })
+    .catch(err => {
+      document.body.innerHTML = `<p>データの読み込みに失敗しました。<br>${err}</p>`;
+    });
 </script>
 
 </body>
