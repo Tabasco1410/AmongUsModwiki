@@ -1,0 +1,7 @@
+{
+  "name": "bait",
+  "jp_name": "ベイト",
+  "description": "キルされた瞬間、キラーがベイトの死体を強制通報する",
+  "image": "images/bait.png",
+  "buttonText": "キル"
+}
