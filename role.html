@@ -15,7 +15,7 @@
     throw new Error("No role specified");
   }
 
-  const jsonPath = `../roles/${category}/${roleName}.json`;
+  const jsonPath = `roles/${category}/${roleName}.json`;
 
   fetch(jsonPath)
     .then(res => {
