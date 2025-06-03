@@ -15,7 +15,8 @@
     throw new Error("No role specified");
   }
 
-  const jsonPath = `./${category}/${roleName}.json`;
+  // 役職JSONのパス例： roles/impostor/penguin.json
+const jsonPath = `./${category}/${roleName}.json`;
 
   fetch(jsonPath)
     .then(res => {
