@@ -3,7 +3,6 @@
     "name": "Impostor",
     "jp_name": "インポスター",
     "description": "クルーメイトをキルできる。",
-    "image": "images/impostor.png",
-    "buttonText": "キル"
+    "image": "images/impostor.png"
   }
 ]
