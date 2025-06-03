@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Impostor",
+    "jp_name": "インポスター",
+    "description": "クルーメイトをキルできる。",
+    "image": "images/impostor.png",
+    "buttonText": "キル"
+  }
+]
