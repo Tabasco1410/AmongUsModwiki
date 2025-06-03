@@ -1,0 +1,40 @@
+<div>
+  <h2 id="role-title"></h2>
+  <img id="role-image" src="" alt="" style="width:150px; height:auto;" />
+  <p id="role-description"></p>
+  <button id="role-button" style="display:none;"></button>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const category = params.get('category');
+  const roleName = params.get('role');
+
+  if (!category || !roleName) {
+    document.body.innerHTML = "<p>役職が指定されていません。</p>";
+    throw new Error("No role specified");
+  }
+
+  const jsonPath = `../roles/${category}/${roleName}.json`;
+
+  fetch(jsonPath)
+    .then(res => {
+      if (!res.ok) throw new Error("JSON読み込み失敗");
+      return res.json();
+    })
+    .then(role => {
+      document.getElementById('role-title').textContent = role.jp_name + ` (${role.name})`;
+      document.getElementById('role-image').src = role.image;
+      document.getElementById('role-image').alt = role.jp_name;
+      document.getElementById('role-description').innerHTML = role.description;
+
+      if (role.buttonText) {
+        const btn = document.getElementById('role-button');
+        btn.textContent = role.buttonText;
+        btn.style.display = 'inline-block';
+      }
+    })
+    .catch(err => {
+      document.body.innerHTML = `<p>役職データの読み込みに失敗しました。<br>${err}</p>`;
+    });
+</script>
