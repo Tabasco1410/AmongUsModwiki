@@ -3,44 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <title>Among Us Mod Wiki</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      margin-bottom: 0;
+    }
+    p.description {
+      margin-top: 5px;
+      color: #555;
+    }
+    /* タブのスタイル */
+    .tabs {
+      margin-top: 20px;
+      display: flex;
+      border-bottom: 2px solid #ccc;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      background: #eee;
+      margin-right: 5px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      user-select: none;
+      transition: background 0.3s;
+    }
+    .tab.active {
+      background: white;
+      border-bottom: 2px solid white;
+      font-weight: bold;
+    }
+    /* サブバーの役職リスト */
+    .subbar {
+      border: 1px solid #ccc;
+      padding: 10px 15px;
+      background: white;
+      border-radius: 0 5px 5px 5px;
+      margin-top: -1px;
+    }
+    .subbar ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .subbar ul li a {
+      text-decoration: none;
+      color: #0366d6;
+      padding: 5px 8px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      transition: background-color 0.2s;
+    }
+    .subbar ul li a:hover {
+      background-color: #d0e7ff;
+      border-color: #0366d6;
+    }
+  </style>
 </head>
 <body>
+
   <h1>Among Us Mod Wiki</h1>
-  <div id="role-list"></div>
+  <p class="description">ここではAmong UsのMod役職をカテゴリごとに詳しく紹介しています。</p>
 
-  <script>
-    fetch('roles.json')
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('role-list');
-        data.forEach(role => {
-          const roleDiv = document.createElement('div');
-          roleDiv.className = 'role-container';
-          roleDiv.innerHTML = `
-            <img src="${role.image}" alt="${role.jp_name}" style="width:100px; height:auto;" />
-            <div class="role-info">
-              <h2>${role.jp_name} (${role.name})</h2>
-              <div style="display:flex; align-items:center; gap:10px;">
-                ${role.buttonText ? `<button class="kill-btn">${role.buttonText}</button>` : ''}
-                <p>${role.description}</p>
-              </div>
-            </div>
-          `;
-          container.appendChild(roleDiv);
+  <div class="tabs" id="tabs">
+    <!-- JSでタブ追加 -->
+  </div>
 
-          // ボタンのマウスオーバー動作（クリックじゃなくて）
-          const btn = roleDiv.querySelector('button.kill-btn');
-          if (btn) {
-            btn.addEventListener('mouseenter', () => {
-              alert(`${role.jp_name}キルボタン`);
-            });
-          }
-        });
-      })
-      .catch(error => {
-        console.error('JSON読み込みエラー:', error);
-      });
-  </script>
+  <div class="subbar" id="subbar" style="display:none;">
+    <ul id="subroles">
+      <!-- JSでサブ役職リンク追加 -->
+    </ul>
+  </div>
+
+<script>
+  // カテゴリとサブ役職のデータ（必要に応じてJSONファイルからfetchでもOK）
+  const data = {
+    impostor: {
+      label: "インポスター",
+      roles: [
+        {key: "evil_guesser", label: "イビルゲッサー"},
+        {key: "penguin", label: "ペンギン"},
+      ],
+    },
+    crewmate: {
+      label: "クルーメイト",
+      roles: [
+        {key: "doctor", label: "ドクター"},
+        {key: "bait", label: "ベイト"},
+      ],
+    },
+    third_faction: {
+      label: "第三陣営",
+      roles: [
+        {key: "jackal", label: "ジャッカル"},
+        {key: "arsonist", label: "アーソニスト"},
+      ],
+    },
+    ghost: {
+      label: "幽霊役職",
+      roles: [
+        {key: "ghost_botaner", label: "ゴーストボタナー"},
+        {key: "hallucination", label: "ハルシネーション"},
+      ],
+    },
+  };
+
+  const tabsContainer = document.getElementById('tabs');
+  const subbar = document.getElementById('subbar');
+  const subrolesUl = document.getElementById('subroles');
+
+  // タブを作る関数
+  function createTabs() {
+    for (const [key, cat] of Object.entries(data)) {
+      const tab = document.createElement('div');
+      tab.className = 'tab';
+      tab.textContent = cat.label;
+      tab.dataset.key = key;
+      tab.addEventListener('click', () => selectTab(key));
+      tabsContainer.appendChild(tab);
+    }
+  }
+
+  // タブ選択時に呼ばれる
+  function selectTab(key) {
+    // タブのactive切り替え
+    [...tabsContainer.children].forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.key === key);
+    });
+
+    // サブ役職を表示
+    subrolesUl.innerHTML = '';
+    data[key].roles.forEach(role => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `pages/role.html?category=${key}&role=${role.key}`;
+      a.textContent = role.label;
+      li.appendChild(a);
+      subrolesUl.appendChild(li);
+    });
+
+    subbar.style.display = 'block';
+  }
+
+  createTabs();
+  // 最初は一番目のカテゴリを選択
+  selectTab(Object.keys(data)[0]);
+</script>
+
 </body>
 </html>
