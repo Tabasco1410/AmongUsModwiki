@@ -122,7 +122,7 @@
       const li = document.createElement('li');
       const a = document.createElement('a');
       // 役職ページへのリンク。URLパラメータでカテゴリと役職を渡す
-      a.href = `pages/role.html?category=${key}&role=${role.key}`;
+      a.href = `roles/role.html?category=${key}&role=${role.key}`;
       a.textContent = role.label;
       li.appendChild(a);
       subrolesUl.appendChild(li);
