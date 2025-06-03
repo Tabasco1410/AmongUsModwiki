@@ -19,7 +19,7 @@
   }
 
   // 役職JSONのパス例： roles/impostor/penguin.json
-const jsonPath = `../roles/${category}/${roleName}.json`;
+const jsonPath = `${category}/${roleName}.json`;
 
   fetch(jsonPath)
     .then(res => {
