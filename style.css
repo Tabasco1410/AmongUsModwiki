@@ -7,7 +7,7 @@ body {
   color: #333;
 }
 
-/* ヘッダー部分（タイトルを左上に） */
+/* ヘッダー：白背景、左寄せタイトル */
 header {
   background: #ffffff;
   padding: 1em 2em;
@@ -17,6 +17,8 @@ header {
 header h1 {
   margin: 0;
   font-size: 24px;
+  color: #333; /* 黒文字に */
+  text-align: left;
 }
 
 /* タブメニュー */
